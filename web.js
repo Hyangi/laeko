@@ -26,7 +26,7 @@ app.use(app.router);
 app.get('/', routes.index);
 app.get('/users', users.list);
 
-app.listen(8001);
+app.listen(8002);
 console.log("listening on");
 
 /// catch 404 and forwarding to error handler
