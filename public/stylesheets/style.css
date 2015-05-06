@@ -7,3 +7,7 @@ body {
 a {
   color: #00B7FF;
 }
+#main{
+  border:1pt solid #333333;
+  margin: 0 auto;
+}
