@@ -81,7 +81,18 @@ window.onload = function(){
 
     var nowmenu = false;
     page.onclick = function(E){
-    if(nowwhat != "login" && nowwhat != "map" && nowmenu == false){
+    if(nowwhat == "login"){
+        context.drawImage(ar2, 0, 0);
+        k1.style.left = '-500px';
+        k2.style.left = '-500px';
+        context.drawImage(lf, 0,485);
+        context.drawImage(rf, 270,485);
+        vizago.drawImage(char, 0,0);
+        charac.style.left = "200px";
+        charac.style.top = "375px";
+        nowwhat = "home";
+    }
+    else if(nowwhat != "login" && nowwhat != "map" && nowmenu == false){
         var cnt1 = 1.5;
         var cnt2 = 1.5;
         var cnt3 = 1.5;
