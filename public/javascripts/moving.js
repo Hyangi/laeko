@@ -1,3 +1,11 @@
+window.requestAnimFrame = (function(){
+    return  window.requestAnimationFrame       ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame    ||
+        function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+        };
+})();
 
 window.onload = function(){
     console.log("윈도우 온로드");
@@ -53,6 +61,43 @@ window.onload = function(){
     m3.style.left = "-200px";
     m4.style.left = "-200px";
 
+
+
+    function gameLoop () {
+
+        window.requestAnimationFrame(gameLoop);
+
+        justis.update();
+        justis.render();
+    }
+
+    var char = new Image();
+    char.src = 'images/justis_right.png';
+    var char_left = new Image();
+    char_left.src = 'images/justis_left.png';
+
+    var justis = sprite({
+        context: vizago,
+        width: 128,
+        height: 48,
+        image: char,
+        numberOfFrames: 4,
+        loop: false
+    });
+    justis.chushiright = true;
+    justis.turn = function(kiel){
+        if(kiel == 'right'){
+            justis.image = char;
+            justis.chushiright = true;
+        }
+        else{
+            justis.image = char_left;
+            justis.chushiright = false;
+        }
+
+    }
+    char.addEventListener('load',gameLoop());
+
     m3.onclick = function(){
         m1.style.left = "-200px";
         m2.style.left = "-200px";
@@ -87,7 +132,7 @@ window.onload = function(){
         k2.style.left = '-500px';
         context.drawImage(lf, 0,485);
         context.drawImage(rf, 270,485);
-        vizago.drawImage(char, 0,0);
+
         charac.style.left = "200px";
         charac.style.top = "375px";
         nowwhat = "home";
@@ -171,10 +216,9 @@ window.onload = function(){
     lf.src = 'images/left.png';
     var rf = new Image();
     rf.src = 'images/right.png';
-    var char = new Image();
-    char.src = 'images/char.png';
+
     var px = 200;
-    var py = 375;
+    var py = 425;
     var ax = 0, ay = 0;
 
 
@@ -231,9 +275,13 @@ window.onload = function(){
                 }
                 break;
             case 37:
+                justis.loop = true;
+                justis.turn('left');
                 ax = -2;
                 break;
             case 39:
+                justis.loop = true;
+                justis.turn('right');
                 ax = 2;
                 break;
         }
@@ -241,9 +289,11 @@ window.onload = function(){
     var moving2 = function (E) {
         switch (E.keyCode) {
             case 37:
+                justis.loop = false;
                 ax = 0;
                 break;
             case 39:
+                justis.loop = false;
                 ax = 0;
                 break;
         }
@@ -256,7 +306,60 @@ window.onload = function(){
 }
 
 
+function sprite (options) {
 
+
+    var that = {},
+        frameIndex = 0,
+        tickCout = 0,
+        ticksPerFrame = 10,
+        numberOfFrames = options.numberOfFrames || 1;
+
+
+    that.context = options.context;
+    that.width = options.width;
+    that.height = options.height;
+    that.image = options.image;
+    that.loop = options.loop;
+
+        that.render = function(){
+
+            that.context.clearRect(0,0,that.width / numberOfFrames, that.height);
+
+            that.context.drawImage(
+                that.image,
+                frameIndex * that.width / numberOfFrames,
+                0,
+                that.width / numberOfFrames,
+                that.height,
+                0,
+                0,
+                that.width / numberOfFrames,
+                that.height);
+        };
+
+        that.update = function(){
+
+            tickCout +=1;
+            if(!that.loop){
+                frameIndex = 0;
+            }
+            else if(tickCout > ticksPerFrame){
+
+                tickCout = 0;
+                console.log('d');
+                if (frameIndex < numberOfFrames - 1){
+                    // iras al sekvanta kadro
+
+                    frameIndex += 1;
+                }
+                else if(that.loop){
+                    frameIndex = 0;
+                }
+            }
+        }
+    return that;
+}
 
 
 
